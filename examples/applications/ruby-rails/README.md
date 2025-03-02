@@ -40,7 +40,7 @@ Rails applications require specific environment variables, such as `RAILS_ENV`, 
 5. Enter the value for the variable, such as `development`.
 6. Optionally, provide a description, such as `The environment in which the application runs`.
 7. Click **CONFIRM**.
-8. Repeat steps 4-7 for `PORT` variable with value `9000`.
+8. Repeat steps 2-7 for `PORT` variable with value `9000`.
 
 ## 🛠️ Creating a Daemon for the Application
 
