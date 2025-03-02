@@ -37,7 +37,7 @@ Rails applications require specific environment variables, such as `RAILS_ENV`, 
 2. Navigate to the **Variables** tab.
 3. Click **Add Variable** in the upper-right corner.
 4. Enter a name for the variable, such as `RAILS_ENV`.
-5. Enter the value for the variable, such as `production`.
+5. Enter the value for the variable, such as `development`.
 6. Optionally, provide a description, such as `The environment in which the application runs`.
 7. Click **CONFIRM**.
 
