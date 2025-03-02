@@ -24,7 +24,7 @@ To add your Ruby on Rails application to Devopness:
 8. Choose the **Stack**: `Ruby`.
 9. Choose the **Engine Version**: `3.2.2`, then click **NEXT**.
 10. Choose the **Framework**: `Ruby on Rails`.
-11. Provide the **Root Directory**: `/examples/application/ruby-rails`, then click **CONFIRM**.
+11. Provide the **Root Directory**: `/examples/applications/ruby-rails`, then click **CONFIRM**.
 12. Once created, you can view the application details.
 
 ## ⚙️ Configuring Environment Variables
