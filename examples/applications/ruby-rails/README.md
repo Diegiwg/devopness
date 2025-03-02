@@ -29,7 +29,7 @@ To add your Ruby on Rails application to Devopness:
 
 ## ⚙️ Configuring Environment Variables
 
-Rails applications require specific environment variables, such as `RAILS_ENV`, `PORT`, and database credentials.
+Rails applications require specific environment variables, such as `RAILS_ENV`, `PORT`, etc.
 
 ### Managing Environment Variables
 
@@ -40,6 +40,7 @@ Rails applications require specific environment variables, such as `RAILS_ENV`, 
 5. Enter the value for the variable, such as `development`.
 6. Optionally, provide a description, such as `The environment in which the application runs`.
 7. Click **CONFIRM**.
+8. Repeat steps 4-7 for `PORT` variable with value `9000`.
 
 ## 🛠️ Creating a Daemon for the Application
 
@@ -62,7 +63,7 @@ To make your application accessible via a domain or subdomain, set up a virtual 
 1. Open the **Details** page of your application.
 2. Click **ADD VIRTUAL HOST** in the application details.
 3. For a quick and simple test, select **Virtual Host Type**: `Server IP Address`.
-4. Provide your **Server IP and port** (e.g., `127.0.0.1:9000`) as **Name**.
+4. Provide your **Server IP and Port** (e.g., `127.0.0.1:9200`) as **Name**.
    - If you do not have a server, follow the [Add a Server](https://www.devopness.com/docs/servers/add-server) documentation before proceeding.
 5. Specify the **Application Listen Address** as `http://localhost:{PORT}`.
    - If the `PORT` environment variable is not set, Rails defaults to `3000`.
