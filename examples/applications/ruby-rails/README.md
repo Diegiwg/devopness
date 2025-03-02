@@ -50,7 +50,7 @@ To ensure your Rails application runs continuously as a background service, crea
 1. Open the **Details** page of your application.
 2. Click **ADD DAEMON** in the application details.
 3. Provide a name for the daemon, such as `rails-server`.
-4. Specify the command to start your application: `rails s`.
+4. Specify the command to start your application: `bundle exec rails server`.
 5. Click **CONFIRM** to create the daemon.
 
 ## 🌐 Creating a Virtual Host for the Application
