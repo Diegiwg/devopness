@@ -5,6 +5,7 @@
 ## Overview
 
 This directory contains example applications demonstrating how to integrate with Devopness.
+
 Each subfolder provides a sample implementation using different technologies and frameworks.
 
 ## 📚 Examples
@@ -16,7 +17,7 @@ Each subfolder provides a sample implementation using different technologies and
 ## 🙋 Issues
 
 See the [issue backlog](https://github.com/devopness/devopness/issues) for a list of active or proposed tasks.
-Feel free to create new issues, report bugs, and send feature requests.
+Feel free to create new issues, report bugs, or request new example applications.
 
 ## ✍️ Contributing
 
