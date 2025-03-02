@@ -14,18 +14,18 @@ It covers adding an application, configuring environment variables, creating a d
 
 To add your Ruby on Rails application to Devopness:
 
-1. Navigate to a **project** on Devopness and select an **environment**.
-2. Locate the **Applications** card.
-3. Click **View** to see the list of existing applications.
-4. In the upper-right corner, click **ADD APPLICATION**.
-5. Select a **Source Provider**.
-6. Select a **Credential**.
-7. Choose the **Git Repository**: `devopness/devopness`.
-8. Choose the **Stack**: `Ruby`.
-9. Choose the **Engine Version**: `3.2.2`, then click **NEXT**.
-10. Choose the **Framework**: `Ruby on Rails`.
-11. Provide the **Root Directory**: `/examples/applications/ruby-rails`, then click **CONFIRM**.
-12. Once created, you can view the application details.
+1. Navigate to a **project** on Devopness and select an **environment**
+2. Locate the **Applications** card
+3. Click **View** to see the list of existing applications
+4. In the upper-right corner, click **ADD APPLICATION**
+5. Select a **Source Provider**
+6. Select a **Credential**
+7. Choose the **Git Repository**: `devopness/devopness`
+8. Choose the **Stack**: `Ruby`
+9. Choose the **Engine Version**: `3.2.2`, then click **NEXT**
+10. Choose the **Framework**: `Ruby on Rails`
+11. Provide the **Root Directory**: `/examples/applications/ruby-rails`, then click **CONFIRM**
+12. Once created, you can view the application details
 
 ## ⚙️ Configuring Environment Variables
 
@@ -33,14 +33,14 @@ Rails applications require specific environment variables, such as `RAILS_ENV`, 
 
 ### Managing Environment Variables
 
-1. Open the **Details** page of your application.
-2. Navigate to the **Variables** tab.
-3. Click **Add Variable** in the upper-right corner.
-4. Enter a name for the variable, such as `RAILS_ENV`.
-5. Enter the value for the variable, such as `development`.
-6. Optionally, provide a description, such as `The environment in which the application runs`.
-7. Click **CONFIRM**.
-8. Repeat steps 2-7 for `PORT` variable with value `9000`.
+1. Open your application's **Details** page
+2. Go to the **Variables** tab
+3. Click **Add Variable** in the upper-right corner
+4. Set the variable name to **`RAILS_ENV`**
+5. Set the value to **`development`**
+   - Optionally, add a description, e.g., *Defines the application's runtime environment*
+6. Click **CONFIRM** to save
+7. Repeat the process for the **`PORT`** variable with a value of **`9000`**
 
 ## 🛠️ Creating a Daemon for the Application
 
@@ -48,11 +48,11 @@ Rails applications require specific environment variables, such as `RAILS_ENV`, 
 
 To ensure your Rails application runs continuously as a background service, create a daemon:
 
-1. Open the **Details** page of your application.
-2. Click **ADD DAEMON** in the application details.
-3. Provide a name for the daemon, such as `rails-server`.
-4. Specify the command to start your application: `bundle exec rails server`.
-5. Click **CONFIRM** to create the daemon.
+1. Open the **Details** page of your application
+2. Click **ADD DAEMON** in the application details
+3. Provide a name for the daemon, such as `rails-server`
+4. Specify the command to start your application: `bundle exec rails server`
+5. Click **CONFIRM** to create the daemon
 
 ## 🌐 Creating a Virtual Host for the Application
 
@@ -60,14 +60,14 @@ To ensure your Rails application runs continuously as a background service, crea
 
 To make your application accessible via a domain or subdomain, set up a virtual host:
 
-1. Open the **Details** page of your application.
-2. Click **ADD VIRTUAL HOST** in the application details.
-3. For a quick and simple test, select **Virtual Host Type**: `Server IP Address`.
-4. Provide your **Server IP and Port** (e.g., `127.0.0.1:9200`) as **Name**.
-   - If you do not have a server, follow the [Add a Server](https://www.devopness.com/docs/servers/add-server) documentation before proceeding.
-5. Specify the **Application Listen Address** as `http://localhost:{PORT}`.
-   - If the `PORT` environment variable is not set, Rails defaults to `3000`.
-6. Click **CONFIRM** to create the virtual host.
+1. Open the **Details** page of your application
+2. Click **ADD VIRTUAL HOST** in the application details
+3. For a quick and simple test, select **Virtual Host Type**: `Server IP Address`
+4. Provide your **Server IP and Port** (e.g., `127.0.0.1:9200`) as **Name**
+   - If you do not have a server, follow the [Add a Server](https://www.devopness.com/docs/servers/add-server) documentation before proceeding
+5. Specify the **Application Listen Address** as `http://localhost:{PORT}`
+   - If the `PORT` environment variable is not set, Rails defaults to `3000`
+6. Click **CONFIRM** to create the virtual host
 
 ## 🚢 Deploying the Application
 
@@ -75,12 +75,12 @@ Deploying your application ensures that your latest code changes are applied wit
 
 ### Deployment Steps
 
-1. Open the **Details** page of your application.
-2. Click **DEPLOY** on the application you want to deploy.
-3. Follow the prompts, then click **NEXT**.
-4. Review the deployment details, then click **CONFIRM**.
-5. A notification popup will confirm that the deployment has been triggered.
-6. Wait for the `Application Deploy` action to complete.
+1. Open the **Details** page of your application
+2. Click **DEPLOY** on the application you want to deploy
+3. Follow the prompts, then click **NEXT**
+4. Review the deployment details, then click **CONFIRM**
+5. A notification popup will confirm that the deployment has been triggered
+6. Wait for the `Application Deploy` action to complete
 
 ## ✍️ Contributing
 
