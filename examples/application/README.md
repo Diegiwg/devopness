@@ -1,7 +1,5 @@
 # Devopness - Application Examples
 
-[![MIT License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](https://github.com/devopness/devopness/blob/main/LICENSE)
-
 ## Overview
 
 This directory contains example applications demonstrating how to integrate with Devopness.
