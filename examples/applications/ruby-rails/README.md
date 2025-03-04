@@ -40,6 +40,7 @@ Rails applications require specific environment variables, such as `RAILS_ENV`, 
    - Optionally, add a description (e.g., *Defines the application's runtime environment*)
 1. Click **CONFIRM** to save
 1. Repeat the process for the `PORT` variable with a value of `9000`
+    - If the `PORT` environment variable is not set, Rails defaults to `3000`
 
 ## 🛠️ Creating a Daemon for the Application
 
