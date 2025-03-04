@@ -70,7 +70,7 @@ Make your application accessible via a domain or server IP address by adding a v
 1. Click **View** in the Virtual Hosts card to see a list of existing Virtual Hosts
 1. On the upper-right corner of the list, click **ADD VIRTUAL HOST**
 1. Choose **Virtual Host Type**: `Server IP Address`
-1. Provide your **Server IP and Port** (e.g., `127.0.0.1:9200`)
+1. Set your **Server IP and Port** using the format `{IP}:{PORT}`, e.g. `127.0.0.1:9200`
    - If no server is available, follow the [Add a Server](https://www.devopness.com/docs/servers/add-server) guide before proceeding.
 1. Specify the **Application Listen Address** as `http://localhost:{PORT}`
 1. Click **CONFIRM** to create the virtual host
