@@ -50,7 +50,7 @@ Ensure the Rails application runs continuously as a background service by adding
 1. On Devopness, navigate to the application's **Details** page
 1. Click **ADD DAEMON** in the application details
 1. Set the daemon **Name** to `rails-server`
-1. Specify the **Command** to start your application:
+1. Set the **Command** to start your application:
 
    ```sh
    bundle exec rails server
