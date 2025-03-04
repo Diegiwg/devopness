@@ -84,7 +84,6 @@ Deploy your application to apply the latest changes with minimal downtime.
 1. In the Application details page, click `DEPLOY`
 1. Follow the prompts, then click **NEXT**
 1. Review the deployment details, then click **CONFIRM**
-1. A notification popup will confirm that the deployment has been triggered
 1. Wait for the `Application Deploy` action to complete
 
 ## ✍️ Contributing
