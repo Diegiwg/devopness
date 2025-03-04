@@ -32,7 +32,7 @@ Rails applications require specific environment variables, such as `RAILS_ENV`, 
 
 ### Managing Environment Variables
 
-1. On Devopness, navigate to the application's **Details** page
+1. In the Application details page, click the **Variables** tab
 1. Open the **Variables** tab
 1. Click **Add Variable** in the upper-right corner
 1. Set the variable name to `RAILS_ENV`
