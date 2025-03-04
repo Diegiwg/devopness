@@ -23,7 +23,7 @@ Add a Ruby on Rails application to your infrastructure environment so it can be 
 1. Choose the **Stack**: `Ruby`
 1. Choose the **Engine Version**: `3.4.2`, then click **NEXT**
 1. Choose the **Framework**: `Ruby on Rails`
-1. Provide the **Root Directory**: `/examples/applications/ruby-rails`, then click **CONFIRM**
+1. Set the **Root Directory** to `/examples/applications/ruby-rails`, then click **CONFIRM**
 1. In the Application details view, the newly created application details will be displayed
 
 ## ⚙️ Configuring Environment Variables
