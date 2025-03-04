@@ -81,8 +81,7 @@ Make your application accessible via a domain or server IP address by adding a v
 
 Deploy your application to apply the latest changes with minimal downtime.
 
-1. On Devopness, navigate to the application's **Details** page
-1. Click **DEPLOY** on the application you want to deploy
+1. In the Application details page, click `DEPLOY`
 1. Follow the prompts, then click **NEXT**
 1. Review the deployment details, then click **CONFIRM**
 1. A notification popup will confirm that the deployment has been triggered
