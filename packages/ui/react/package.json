@@ -81,7 +81,7 @@
     "@types/node": "^22.15.29",
     "@types/path-browserify": "^1.0.3",
     "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
+    "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react-swc": "^3.10.1",
     "eslint": "^9.28.0",
     "eslint-plugin-import": "^2.31.0",
