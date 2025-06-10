@@ -80,7 +80,7 @@
     "@types/lodash": "^4.17.17",
     "@types/node": "^22.15.30",
     "@types/path-browserify": "^1.0.3",
-    "@types/react": "^19.1.6",
+    "@types/react": "^19.1.7",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react-swc": "^3.10.2",
     "eslint": "^9.28.0",
