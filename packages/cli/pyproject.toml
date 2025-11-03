@@ -1,0 +1,111 @@
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[project]
+name = "devopness_cli"
+version = "0.0.0"
+description = "Devopness CLI - Painless essential DevOps to everyone"
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [{ name = "Devopness (https://www.devopness.com)" }]
+keywords = [
+  "API Client",
+  "Cloud Engineering",
+  "Cloud Infrastructure",
+  "Cloud Platform",
+  "Cloud Resource Management",
+  "Configuration Management",
+  "Deployment Automation",
+  "Devopness",
+  "DevOps",
+  "Infrastructure as Code",
+  "Platform Engineering",
+  "Python SDK",
+  "Server Management",
+  "Server Provisioning",
+  "Zero Downtime Deployment",
+]
+classifiers = [
+  "Development Status :: 5 - Production/Stable",
+  "Environment :: Console",
+  "Framework :: Pydantic",
+  "Intended Audience :: Developers",
+  "Intended Audience :: System Administrators",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development",
+  "Topic :: Software Development :: Libraries",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+  "Topic :: System :: Systems Administration",
+  "Topic :: Utilities",
+]
+
+[project.urls]
+homepage = "https://www.devopness.com"
+repository = "https://github.com/devopness/devopness"
+
+[project.scripts]
+devopness = 'devopness_cli.main:main'
+
+[tool.poetry]
+packages = [
+  { include = "devopness_cli", from = "src", to = "." },
+]
+
+[tool.poetry.dependencies]
+devopness = "^2.1.2"
+typer = "^0.20.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.14.3"
+mypy = "1.18.2"
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+preview = true
+
+extend-select = [
+  "A",   # flake8-builtins (avoid shadowing built-ins)
+  "ANN", # flake8-annotations (type hints for public APIs)
+  "B",   # flake8-bugbear (common bugs and best practices)
+  "E",   # pycodestyle (error)
+  "F",   # pyflakes (basic errors)
+  "I",   # isort (import sorting)
+  "N",   # pep8-naming
+  "PIE", # flake8-pie (extra cleanups)
+  "PLC", # pylint conventions
+  "PLE", # pylint errors
+  "PLW", # pylint warnings
+  "Q",   # flake8-quotes (quote consistency)
+  "RET", # flake8-return (return statement rules)
+  "RUF", # Ruff-specific rules
+  "S",   # flake8-bandit (security rules)
+  "SIM", # flake8-simplify
+  "W",   # pycodestyle (warning)
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["devopness"]
+case-sensitive = true
+
+[tool.mypy]
+python_version = "3.12"
+
+strict = true
+disallow_any_unimported = true
+strict_optional = true
+warn_no_return = true
+warn_unreachable = true
+
+sqlite_cache = true
+cache_fine_grained = true
