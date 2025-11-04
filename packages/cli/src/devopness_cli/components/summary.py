@@ -5,6 +5,7 @@ from rich.align import VerticalAlignMethod
 from rich.console import Console, JustifyMethod, OverflowMethod, RenderableType
 from rich.panel import Panel
 from rich.style import Style, StyleType
+from rich.color import ANSI_COLOR_NAMES
 from rich.table import Table
 
 console = Console()
@@ -78,20 +79,27 @@ def summary(
     )
 
     for column in columns:
+        style = column.style
+        ratio = column.ratio or len(columns)
+
+        if column.header == "ID":
+            style = Style(bold=True, color="dark_blue")
+            ratio = 1
+
         table.add_column(
             header=column.header,
             footer=column.footer,
             header_style=column.header_style,
             highlight=column.highlight,
             footer_style=column.footer_style,
-            style=column.style,
+            style=style,
             justify=column.justify,
             vertical=column.vertical,
             overflow=column.overflow,
             width=column.width,
             min_width=column.min_width,
             max_width=column.max_width,
-            ratio=column.ratio or len(columns),
+            ratio=ratio,
             no_wrap=column.no_wrap,
         )
 
