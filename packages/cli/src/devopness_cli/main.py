@@ -1,19 +1,15 @@
 import typer
 
-import devopness_cli.modules.environments as environments
-import devopness_cli.modules.projects as projects
+from devopness_cli.modules import MODULES
 
-app = typer.Typer(help="Devopness CLI Tool")
-
-app.add_typer(
-    environments.app,
-    name="environments",
+app = typer.Typer(
+    name="Devopness CLI Tool",
+    help="Command-line interface for Devopness platform.",
+    no_args_is_help=True,
 )
 
-app.add_typer(
-    projects.app,
-    name="projects",
-)
+for module_name, module_app in MODULES:
+    app.add_typer(module_app, name=module_name)
 
 
 def main() -> None:
