@@ -1,17 +1,12 @@
 from dataclasses import dataclass
-import json
-from typing import Any, Callable, Literal, Optional
+from typing import Any, Callable, Optional
 
-import typer
 from rich.align import VerticalAlignMethod
 from rich.console import Console, JustifyMethod, OverflowMethod, RenderableType
 from rich.panel import Panel
-from rich.style import StyleType, Style
+from rich.style import Style, StyleType
 from rich.table import Table
 
-from devopness_cli.services.devopness_api import devopness
-
-app = typer.Typer()
 console = Console()
 
 
