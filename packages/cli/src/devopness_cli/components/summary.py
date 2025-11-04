@@ -6,7 +6,7 @@ import typer
 from rich.align import VerticalAlignMethod
 from rich.console import Console, JustifyMethod, OverflowMethod, RenderableType
 from rich.panel import Panel
-from rich.style import StyleType
+from rich.style import StyleType, Style
 from rich.table import Table
 
 from devopness_cli.services.devopness_api import devopness
@@ -17,7 +17,7 @@ console = Console()
 
 @dataclass
 class SummaryColumn:
-    """Configuration for a summary column."""
+    """Dataclass to represent a column in a summary table."""
 
     # Method to extract the value for this column from a resource
     get_value: Callable[[Any], Any]
@@ -51,13 +51,33 @@ def summary(
     """
 
     if not data:
-        console.print(f"[bold yellow]No {resource_name.lower()}s found.[/bold yellow]")
+        empty_state = Panel(
+            f"[bold yellow]No {resource_name.lower()}s found.[/bold yellow]",
+            title=f"{resource_name} Summary",
+            border_style="yellow",
+        )
+
+        console.print(empty_state)
         return
 
     table = Table(
-        f"Page {page} of {page_count}",
+        caption=f"Page {page} of {page_count}",
         show_header=True,
-        header_style="bold magenta",
+        header_style=Style(
+            bold=True,
+        ),
+        border_style=Style(
+            dim=True,
+        ),
+        expand=True,
+    )
+
+    # First column is always Index
+    table.add_column(
+        "#",
+        style=Style(dim=True),
+        justify="right",
+        no_wrap=True,
     )
 
     for column in columns:
@@ -74,13 +94,19 @@ def summary(
             width=column.width,
             min_width=column.min_width,
             max_width=column.max_width,
-            ratio=column.ratio,
+            ratio=column.ratio or len(columns),
             no_wrap=column.no_wrap,
         )
 
-    for resource in data:
-        row = [str(column.get_value(resource)) for column in columns]
+    for index, resource in enumerate(data, start=1 + (page - 1) * len(data)):
+        row = [str(index)] + [str(column.get_value(resource)) for column in columns]
 
         table.add_row(*row)
 
-    console.print(table)
+    box = Panel(
+        table,
+        title=f"{resource_name} Summary",
+        border_style="green",
+    )
+
+    console.print(box)
