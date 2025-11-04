@@ -18,6 +18,13 @@ class Config:
     base_url: str = "https://api.devopness.com"
     token: str | None = None  # token is not stored in plain text
 
+    @property
+    def location(self) -> str:
+        """
+        Returns the location of the configuration file as a string.
+        """
+        return str(CONFIG_FILE)
+
     @staticmethod
     def validate_url(url: str) -> bool:
         """

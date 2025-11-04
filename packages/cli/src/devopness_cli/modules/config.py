@@ -1,5 +1,6 @@
 import typer
 from rich.console import Console
+from rich.table import Table
 
 from devopness_cli.services.config_manage import Config, ConfigManager
 
@@ -77,11 +78,30 @@ def set_config(
 
 @app.command(name="show")
 def show_config() -> None:
-    """Display current configuration."""
+    """Display current Devopness CLI configuration."""
     cfg = ConfigManager.load()
 
-    console.print(f"[bold]API URL:[/bold] {cfg.base_url}")
-    console.print(f"[bold]Token is configured:[/bold] {'Yes' if cfg.token else 'No'}")
+    table = Table(
+        box=None,
+        show_header=False,
+    )
+
+    table.add_row(
+        "[bold cyan]API URL[/bold cyan]",
+        cfg.base_url,
+    )
+
+    table.add_row(
+        "[bold cyan]Token is configured[/bold cyan]",
+        "Yes" if cfg.token else "No",
+    )
+
+    table.add_row(
+        "[bold cyan]Config file location[/bold cyan]",
+        str(cfg.location),
+    )
+
+    console.print(table)
 
 
 @app.command(name="clear")
