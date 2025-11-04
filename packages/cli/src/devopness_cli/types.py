@@ -2,12 +2,6 @@ from typing import Literal
 
 import typer
 
-ResourceIdType = int
-ResourceIdOption: ResourceIdType = typer.Option(
-    help="ID of the argument resource.",
-    min=1,
-)
-
 OutputType = Literal["table", "json", "text"]
 OutputOption: OutputType = typer.Option(
     help="Output format.",
