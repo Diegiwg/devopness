@@ -1,6 +1,7 @@
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
+import re
 
 import keyring
 import typer
@@ -17,6 +18,13 @@ class Config:
     base_url: str = "https://api.devopness.com"
     token: str | None = None  # token is not stored in plain text
 
+    @staticmethod
+    def validate_url(url: str) -> bool:
+        """
+        Validate a URL by checking if it starts with http:// or https://.
+        """
+        return re.match(r"^https?://", url) is not None
+
 
 class ConfigManager:
     """Handles secure loading and saving of CLI configuration."""
@@ -32,7 +40,12 @@ class ConfigManager:
 
         token = keyring.get_password(APP_NAME, "token")
 
-        return Config(token=token, **data)
+        config = Config(token=token, **data)
+
+        if not config.validate_url(config.base_url):
+            config.base_url = "https://api.devopness.com"
+
+        return config
 
     @staticmethod
     def save(config: Config) -> None:
@@ -51,6 +64,9 @@ class ConfigManager:
             keyring.set_password(APP_NAME, "token", config.token)
 
     @staticmethod
-    def clear_token() -> None:
-        """Remove stored token from keyring."""
+    def clear() -> None:
+        """Remove stored token from keyring and config file."""
         keyring.delete_password(APP_NAME, "token")
+
+        if CONFIG_FILE.exists():
+            CONFIG_FILE.unlink()

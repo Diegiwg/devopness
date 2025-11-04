@@ -1,21 +1,15 @@
+import re
+
 import typer
 from rich.console import Console
 
-from devopness_cli.services.config_manage import ConfigManager
+from devopness_cli.services.config_manage import ConfigManager, Config
 
 app = typer.Typer(
     name="config",
     help="Manage Devopness CLI configuration.",
     no_args_is_help=True,
 )
-
-set_app = typer.Typer(
-    name="set",
-    help="Set configuration values.",
-    no_args_is_help=True,
-)
-
-app.add_typer(set_app, name="set")
 
 console = Console()
 
@@ -29,6 +23,9 @@ def init_config() -> None:
         "Enter the Devopness API Base URL",
         default="https://api.devopness.com",
     )
+
+    if not Config.validate_url(base_url):
+        raise typer.BadParameter("Base URL must start with http:// or https://")
 
     # Set API Token
     token = typer.prompt(
@@ -45,6 +42,41 @@ def init_config() -> None:
     console.print("[green]Configuration has been initialized successfully.[/green]")
 
 
+@app.command(name="set")
+def set_config(
+    token: str = typer.Option(
+        default=None,
+        help="Personal Access Token for authentication.",
+        hide_input=True,
+    ),
+    base_url: str = typer.Option(
+        default=None,
+        help="Base URL for the Devopness API.",
+    ),
+) -> None:
+    """Set configuration options non-interactively."""
+
+    if not token and not base_url:
+        console.print("[yellow]No changes provided.[/yellow]")
+
+        return
+
+    cfg = ConfigManager.load()
+
+    if token:
+        cfg.token = token
+
+    if base_url:
+        if not Config.validate_url(base_url):
+            raise typer.BadParameter("Base URL must start with http:// or https://")
+
+        cfg.base_url = base_url
+
+    ConfigManager.save(cfg)
+
+    console.print("[green]Configuration has been updated successfully.[/green]")
+
+
 @app.command(name="show")
 def show_config() -> None:
     """Display current configuration."""
@@ -55,45 +87,8 @@ def show_config() -> None:
 
 
 @app.command(name="clear")
-def clear_token() -> None:
+def clear_config() -> None:
     """Clear the stored API token."""
-    ConfigManager.clear_token()
+    ConfigManager.clear()
 
-    console.print("[green]Token has been cleared successfully.[/green]")
-
-
-@set_app.command(name="token")
-def set_token(
-    token: str = typer.Option(
-        help="Personal Access Token for authentication.",
-        prompt=True,
-        hide_input=True,
-        prompt_required=False,
-    ),
-) -> None:
-    """Set the API token for authentication."""
-
-    cfg = ConfigManager.load()
-    cfg.token = token
-
-    ConfigManager.save(cfg)
-
-    console.print("[green]Token has been set successfully.[/green]")
-
-
-@set_app.command(name="base-url")
-def set_base_url(
-    base_url: str = typer.Option(
-        help="Base URL for the Devopness API.",
-        prompt=True,
-        prompt_required=False,
-    ),
-) -> None:
-    """Set the base URL for the Devopness API."""
-
-    cfg = ConfigManager.load()
-    cfg.base_url = base_url
-
-    ConfigManager.save(cfg)
-
-    console.print("[green]Base URL has been set successfully.[/green]")
+    console.print("[green]Configuration has been cleared successfully.[/green]")
