@@ -9,7 +9,12 @@ from devopness_cli.components.summary import SummaryColumn, summary
 from devopness_cli.components.to_json import to_json
 from devopness_cli.services.devopness_api import devopness
 
-app = typer.Typer()
+app = typer.Typer(
+    name="projects",
+    help="Manage projects in Devopness.",
+    no_args_is_help=True,
+)
+
 console = Console()
 
 
