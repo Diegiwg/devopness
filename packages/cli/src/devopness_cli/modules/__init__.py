@@ -5,7 +5,7 @@ import devopness_cli.modules.environments as environments
 import devopness_cli.modules.projects as projects
 
 MODULES: list[tuple[str, Typer]] = [
-    ("projects", projects.app),
-    ("environments", environments.app),
+    ("project", projects.app),
+    ("environment", environments.app),
     ("config", config.app),
 ]

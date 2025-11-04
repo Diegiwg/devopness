@@ -1,16 +1,15 @@
-from typing import Literal
-
 import typer
 from devopness.models import Environment, EnvironmentRelation
 from rich.console import Console
 
+import devopness_cli.types as types
 from devopness_cli.components.details import DetailsRow, details
 from devopness_cli.components.summary import SummaryColumn, summary
 from devopness_cli.components.to_json import to_json
 from devopness_cli.services.devopness_api import devopness
 
 app = typer.Typer(
-    name="environments",
+    name="environment",
     help="Manage environments in Devopness.",
     no_args_is_help=True,
 )
@@ -24,32 +23,17 @@ def list_environments(
         help="ID of the project to list environments for.",
         min=1,
     ),
-    page: int = typer.Option(
-        help="Page number.",
-        default=1,
-        min=1,
-        show_default=True,
-    ),
-    per_page: int = typer.Option(
-        help="Number of environments per page.",
-        default=20,
-        min=1,
-        max=100,
-        show_default=True,
-    ),
-    format: Literal["table", "ppjson", "json"] = typer.Option(  # noqa: A002  # pylint: disable=redefined-builtin
-        help="Output format.",
-        default="table",
-        show_default=True,
-    ),
+    page: types.PageType = types.PageOption,
+    per_page: types.PerPageType = types.PerPageOption,
+    output: types.OutputType = types.OutputOption,
 ) -> None:
     """List all environments of a project."""
     res = devopness.environments.list_project_environments(project_id, page, per_page)
 
     environments = res.data
 
-    if format in ("json", "ppjson"):
-        return to_json(environments, pretty=format == "ppjson")
+    if output in ("json", "text"):
+        return to_json(environments, pretty=output == "json")
 
     return summary(
         data=environments,
