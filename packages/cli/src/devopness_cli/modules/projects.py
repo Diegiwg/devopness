@@ -33,8 +33,14 @@ def list_projects(
         data=res.data,
         resource_name="Project",
         columns=[
-            SummaryColumn[ProjectRelation](header="ID", get_value=lambda p: str(p.id)),
-            SummaryColumn[ProjectRelation](header="Name", get_value=lambda p: p.name),
+            SummaryColumn[ProjectRelation](
+                header="ID",
+                get_value=lambda p: str(p.id),
+            ),
+            SummaryColumn[ProjectRelation](
+                header="Name",
+                get_value=lambda p: p.name,
+            ),
             SummaryColumn[ProjectRelation](
                 header="Owner",
                 get_value=lambda p: f"@{p.owner.name}",
@@ -60,12 +66,27 @@ def get_project(
     return details(
         project,
         [
-            DetailsRow[Project](header="ID", get_value=lambda p: str(p.id)),
-            DetailsRow[Project](header="Name", get_value=lambda p: p.name),
-            DetailsRow[Project](header="Owner", get_value=lambda p: f"@{p.owner.name}"),
+            DetailsRow[Project](
+                header="ID",
+                get_value=lambda p: str(p.id),
+            ),
+            DetailsRow[Project](
+                header="Name",
+                get_value=lambda p: p.name,
+            ),
+            DetailsRow[Project](
+                header="Owner",
+                get_value=lambda p: f"@{p.owner.name}",
+            ),
             DetailsRow.line(),
-            DetailsRow[Project](header="Created At", get_value=lambda p: p.created_at),
-            DetailsRow[Project](header="Updated At", get_value=lambda p: p.updated_at),
+            DetailsRow[Project](
+                header="Created At",
+                get_value=lambda p: p.created_at,
+            ),
+            DetailsRow[Project](
+                header="Updated At",
+                get_value=lambda p: p.updated_at,
+            ),
         ],
         project_id,
         "Project",

@@ -5,7 +5,6 @@ from rich.align import VerticalAlignMethod
 from rich.console import Console, JustifyMethod, OverflowMethod, RenderableType
 from rich.panel import Panel
 from rich.style import Style, StyleType
-from rich.color import ANSI_COLOR_NAMES
 from rich.table import Table
 
 console = Console()

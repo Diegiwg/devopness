@@ -3,14 +3,12 @@ from typing import cast
 import typer
 from devopness.models import Application, ApplicationRelation, CredentialRelation
 from rich.console import Console
-from rich.style import Style
 
 import devopness_cli.types as types
 from devopness_cli.components.details import DetailsRow, details
 from devopness_cli.components.summary import SummaryColumn, summary
 from devopness_cli.components.to_json import to_json
 from devopness_cli.services.devopness_api import devopness
-
 
 app = typer.Typer(
     name="application",
@@ -113,8 +111,14 @@ def get_application(
     return details(
         application,
         [
-            DetailsRow[Application](header="ID", get_value=lambda a: str(a.id)),
-            DetailsRow[Application](header="Name", get_value=lambda a: a.name),
+            DetailsRow[Application](
+                header="ID",
+                get_value=lambda a: str(a.id),
+            ),
+            DetailsRow[Application](
+                header="Name",
+                get_value=lambda a: a.name,
+            ),
             DetailsRow.line(),
             DetailsRow[Application](
                 header="Created At",

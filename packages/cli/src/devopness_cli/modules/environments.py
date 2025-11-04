@@ -68,8 +68,14 @@ def get_environment(
     return details(
         environment,
         [
-            DetailsRow[Environment](header="ID", get_value=lambda e: str(e.id)),
-            DetailsRow[Environment](header="Name", get_value=lambda e: e.name),
+            DetailsRow[Environment](
+                header="ID",
+                get_value=lambda e: str(e.id),
+            ),
+            DetailsRow[Environment](
+                header="Name",
+                get_value=lambda e: e.name,
+            ),
             DetailsRow.line(),
             DetailsRow[Environment](
                 header="Created At",
