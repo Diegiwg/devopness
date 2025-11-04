@@ -1,13 +1,13 @@
-import json
 from typing import Literal
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
 
+from devopness_cli.components.details import details, DetailsRow
 from devopness_cli.components.summary import SummaryColumn, summary
-from devopness_cli.services.devopness_api import devopness
 from devopness_cli.components.to_json import to_json
+from devopness_cli.services.devopness_api import devopness
 
 app = typer.Typer()
 console = Console()
@@ -70,14 +70,27 @@ def get_environment(
 
     environment = res.data
 
-    details = Panel.fit(
-        title="Environment",
-        border_style="green",
-        renderable=f"[bold]ID:[/bold] {environment.id}\n"
-        f"[bold]Name:[/bold] {environment.name}\n"
-        "\n"
-        f"[bold]Created At:[/bold] {environment.created_at}\n"
-        f"[bold]Updated At:[/bold] {environment.updated_at}",
+    return details(
+        environment,
+        [
+            DetailsRow(header="ID", get_value=lambda e: e.id),
+            DetailsRow(header="Name", get_value=lambda e: e.name),
+            DetailsRow.line(),
+            DetailsRow(header="Created At", get_value=lambda e: e.created_at),
+            DetailsRow(header="Updated At", get_value=lambda e: e.updated_at),
+        ],
+        environment_id,
+        "Environment",
     )
 
-    console.print(details)
+    # details = Panel.fit(
+    #     title="Environment",
+    #     border_style="green",
+    #     renderable=f"[bold]ID:[/bold] {environment.id}\n"
+    #     f"[bold]Name:[/bold] {environment.name}\n"
+    #     "\n"
+    #     f"[bold]Created At:[/bold] {environment.created_at}\n"
+    #     f"[bold]Updated At:[/bold] {environment.updated_at}",
+    # )
+
+    # console.print(details)

@@ -7,6 +7,7 @@ from rich.panel import Panel
 from devopness_cli.components.summary import SummaryColumn, summary
 from devopness_cli.components.to_json import to_json
 from devopness_cli.services.devopness_api import devopness
+from devopness_cli.components.details import details, DetailsRow
 
 app = typer.Typer()
 console = Console()
@@ -54,7 +55,7 @@ def list_projects(
 
 @app.command(name="get")
 def get_project(
-    project_id: int = typer.Argument(
+    project_id: int = typer.Option(
         help="ID of the project to retrieve.",
         min=1,
     ),
@@ -64,15 +65,16 @@ def get_project(
 
     project = res.data
 
-    details = Panel.fit(
-        title="Project",
-        border_style="green",
-        renderable=f"[bold]ID:[/bold] {project.id}\n"
-        f"[bold]Name:[/bold] {project.name}\n"
-        f"[bold]Owner:[/bold] @{project.owner.name}\n"
-        "\n"
-        f"[bold]Created At:[/bold] {project.created_at}\n"
-        f"[bold]Updated At:[/bold] {project.updated_at}",
+    return details(
+        project,
+        [
+            DetailsRow(header="ID", get_value=lambda p: p.id),
+            DetailsRow(header="Name", get_value=lambda p: p.name),
+            DetailsRow(header="Owner", get_value=lambda p: f"@{p.owner.name}"),
+            DetailsRow.line(),
+            DetailsRow(header="Created At", get_value=lambda p: p.created_at),
+            DetailsRow(header="Updated At", get_value=lambda p: p.updated_at),
+        ],
+        project_id,
+        "Project",
     )
-
-    console.print(details)
