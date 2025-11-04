@@ -4,19 +4,16 @@ from typing import Literal
 import typer
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
 
-from devopness_cli.services.devopness_api import devopness
 from devopness_cli.components.summary import SummaryColumn, summary
+from devopness_cli.services.devopness_api import devopness
+from devopness_cli.components.to_json import to_json
 
 app = typer.Typer()
 console = Console()
 
 
-@app.command(
-    name="list",
-    help="List all environments of a project.",
-)
+@app.command(name="list")
 def list_environments(
     project_id: int = typer.Option(
         help="ID of the project to list environments for.",
@@ -35,26 +32,21 @@ def list_environments(
         max=100,
         show_default=True,
     ),
-    format: Literal["table", "json"] = typer.Option(  # noqa: A002  # pylint: disable=redefined-builtin
+    format: Literal["table", "ppjson", "json"] = typer.Option(  # noqa: A002  # pylint: disable=redefined-builtin
         help="Output format.",
         default="table",
         show_default=True,
     ),
 ) -> None:
+    """List all environments of a project."""
     res = devopness.environments.list_project_environments(project_id, page, per_page)
 
     environments = res.data
 
-    if format == "json":
-        json_environments = [
-            environment.model_dump(mode="json") for environment in environments
-        ]
+    if format in ("json", "ppjson"):
+        return to_json(environments, pretty=format == "ppjson")
 
-        console.print_json(json.dumps(json_environments))
-
-        return
-
-    summary(
+    return summary(
         data=environments,
         resource_name="Environment",
         columns=[
@@ -66,16 +58,14 @@ def list_environments(
     )
 
 
-@app.command(
-    name="get",
-    help="Get a environment by ID.",
-)
+@app.command(name="get")
 def get_environment(
-    environment_id: int = typer.Argument(
+    environment_id: int = typer.Option(
         help="ID of the environment to retrieve.",
         min=1,
     ),
 ) -> None:
+    """Get an environment by ID."""
     res = devopness.environments.get_environment(environment_id)
 
     environment = res.data

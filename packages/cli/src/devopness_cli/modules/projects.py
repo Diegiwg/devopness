@@ -1,22 +1,18 @@
-import json
 from typing import Literal
 
 import typer
 from rich.console import Console
 from rich.panel import Panel
-from rich.table import Table
 
-from devopness_cli.services.devopness_api import devopness
 from devopness_cli.components.summary import SummaryColumn, summary
+from devopness_cli.components.to_json import to_json
+from devopness_cli.services.devopness_api import devopness
 
 app = typer.Typer()
 console = Console()
 
 
-@app.command(
-    name="list",
-    help="List all projects.",
-)
+@app.command(name="list")
 def list_projects(
     page: int = typer.Option(
         help="Page number.",
@@ -31,22 +27,19 @@ def list_projects(
         max=100,
         show_default=True,
     ),
-    format: Literal["table", "json"] = typer.Option(  # noqa: A002  # pylint: disable=redefined-builtin
+    format: Literal["table", "ppjson", "json"] = typer.Option(  # noqa: A002  # pylint: disable=redefined-builtin
         help="Output format.",
         default="table",
         show_default=True,
     ),
 ) -> None:
+    """List all projects."""
     res = devopness.projects.list_projects(page, per_page)
 
-    if format == "json":
-        json_projects = [project.model_dump(mode="json") for project in res.data]
+    if format in ("json", "ppjson"):
+        return to_json(res.data, pretty=format == "ppjson")
 
-        console.print_json(json.dumps(json_projects))
-
-        return
-
-    summary(
+    return summary(
         data=res.data,
         resource_name="Project",
         columns=[
@@ -59,16 +52,14 @@ def list_projects(
     )
 
 
-@app.command(
-    name="get",
-    help="Get a project by ID.",
-)
+@app.command(name="get")
 def get_project(
     project_id: int = typer.Argument(
         help="ID of the project to retrieve.",
         min=1,
     ),
 ) -> None:
+    """Get a project by ID."""
     res = devopness.projects.get_project(project_id)
 
     project = res.data
