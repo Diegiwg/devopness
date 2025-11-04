@@ -1,11 +1,8 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
-from rich.align import VerticalAlignMethod
-from rich.console import Console, JustifyMethod, OverflowMethod, RenderableType
+from rich.console import Console
 from rich.panel import Panel
-from rich.style import Style, StyleType
-from rich.table import Table
 
 console = Console()
 
