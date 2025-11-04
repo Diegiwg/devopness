@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Callable
+from typing import Any, Callable, TypeVar
 
 from rich.console import Console
 from rich.panel import Panel
@@ -7,12 +7,15 @@ from rich.panel import Panel
 console = Console()
 
 
+T = TypeVar("T")
+
+
 @dataclass
-class DetailsRow:
+class DetailsRow[T]:
     """Dataclass to represent a row in a details page."""
 
     # Method to extract the value for this row from a resource
-    get_value: Callable[[Any], Any]
+    get_value: Callable[[T], str]
 
     # Attributes
     header: str

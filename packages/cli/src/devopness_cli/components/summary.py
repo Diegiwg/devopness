@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Optional, TypeVar
 
 from rich.align import VerticalAlignMethod
 from rich.console import Console, JustifyMethod, OverflowMethod, RenderableType
@@ -9,13 +9,15 @@ from rich.table import Table
 
 console = Console()
 
+T = TypeVar("T")
+
 
 @dataclass
-class SummaryColumn:
+class SummaryColumn[T]:
     """Dataclass to represent a column in a summary table."""
 
     # Method to extract the value for this column from a resource
-    get_value: Callable[[Any], Any]
+    get_value: Callable[[T], str]
 
     # Column display properties for Rich Table
     header: "RenderableType" = ""

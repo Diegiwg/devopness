@@ -1,6 +1,7 @@
 from typing import Literal
 
 import typer
+from devopness.models import Environment, EnvironmentRelation
 from rich.console import Console
 
 from devopness_cli.components.details import DetailsRow, details
@@ -49,8 +50,14 @@ def list_environments(
         data=environments,
         resource_name="Environment",
         columns=[
-            SummaryColumn(header="ID", get_value=lambda e: e.id),
-            SummaryColumn(header="Name", get_value=lambda e: e.name),
+            SummaryColumn[EnvironmentRelation](
+                header="ID",
+                get_value=lambda e: str(e.id),
+            ),
+            SummaryColumn[EnvironmentRelation](
+                header="Name",
+                get_value=lambda e: e.name,
+            ),
         ],
         page=page,
         page_count=res.page_count,
@@ -72,24 +79,18 @@ def get_environment(
     return details(
         environment,
         [
-            DetailsRow(header="ID", get_value=lambda e: e.id),
-            DetailsRow(header="Name", get_value=lambda e: e.name),
+            DetailsRow[Environment](header="ID", get_value=lambda e: str(e.id)),
+            DetailsRow[Environment](header="Name", get_value=lambda e: e.name),
             DetailsRow.line(),
-            DetailsRow(header="Created At", get_value=lambda e: e.created_at),
-            DetailsRow(header="Updated At", get_value=lambda e: e.updated_at),
+            DetailsRow[Environment](
+                header="Created At",
+                get_value=lambda e: e.created_at,
+            ),
+            DetailsRow[Environment](
+                header="Updated At",
+                get_value=lambda e: e.updated_at,
+            ),
         ],
         environment_id,
         "Environment",
     )
-
-    # details = Panel.fit(
-    #     title="Environment",
-    #     border_style="green",
-    #     renderable=f"[bold]ID:[/bold] {environment.id}\n"
-    #     f"[bold]Name:[/bold] {environment.name}\n"
-    #     "\n"
-    #     f"[bold]Created At:[/bold] {environment.created_at}\n"
-    #     f"[bold]Updated At:[/bold] {environment.updated_at}",
-    # )
-
-    # console.print(details)
