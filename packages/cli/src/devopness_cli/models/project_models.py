@@ -11,8 +11,6 @@ class ProjectCreateModel:
 
     Attributes:
         name (str): The name of the project.
-        description (str | None): The description of the project.
     """
 
     name: str
-    description: str | None = None
