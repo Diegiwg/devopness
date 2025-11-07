@@ -1,22 +1,18 @@
-import typer
+from cyclopts import App
 
-from devopness_cli.modules import MODULES
-
-app = typer.Typer(
-    name="Devopness CLI Tool",
-    help="Command-line interface for Devopness platform.",
-    no_args_is_help=True,
-)
-
-for module_name, module_app in MODULES:
-    app.add_typer(module_app, name=module_name)
+from devopness_cli.commands import register_commands
 
 
 def main() -> None:
-    """Runs the Devopness CLI Tool."""
+    """Entry point for the Devopness CLI."""
+
+    app = App(
+        help="Devopness CLI - Painless essential DevOps to everyone",
+    )
+
+    register_commands(app)
 
     app()
-
 
 if __name__ == "__main__":
     main()

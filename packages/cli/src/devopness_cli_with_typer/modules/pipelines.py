@@ -2,11 +2,11 @@ import typer
 from devopness.models import Pipeline, PipelineRelation
 from rich.console import Console
 
-import devopness_cli.types as types
-from devopness_cli.components.details import DetailsRow, details
-from devopness_cli.components.summary import SummaryColumn, summary
-from devopness_cli.components.to_json import to_json
-from devopness_cli.services.devopness_api import devopness
+import devopness_cli_with_typer.types as types
+from devopness_cli_with_typer.components.details import DetailsRow, details
+from devopness_cli_with_typer.components.summary import SummaryColumn, summary
+from devopness_cli_with_typer.components.to_json import to_json
+from devopness_cli_with_typer.services.devopness_api import devopness
 
 app = typer.Typer(
     name="pipeline",

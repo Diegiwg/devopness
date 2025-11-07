@@ -2,7 +2,7 @@ import typer
 from rich.console import Console
 from rich.table import Table
 
-from devopness_cli.services.config_manage import Config, ConfigManager
+from devopness_cli_with_typer.services.config_manage import Config, ConfigManager
 
 app = typer.Typer(
     name="config",

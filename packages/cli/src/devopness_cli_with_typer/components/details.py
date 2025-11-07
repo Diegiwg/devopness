@@ -1,8 +1,9 @@
 from dataclasses import dataclass
 from typing import Any, Callable, TypeVar
 
-from rich.console import Console
+from rich.console import Console, Group
 from rich.panel import Panel
+from rich.text import Text
 
 console = Console()
 
@@ -32,6 +33,7 @@ def details(
     rows: list[DetailsRow],
     resource_id: int | str,
     resource_name: str,
+    fullscreen: bool = False,
 ) -> None:
     """Render a details page for a resource."""
 
@@ -46,15 +48,31 @@ def details(
         console.print(empty_state)
         return
 
+    # Build renderables instead of plain strings
+    renderables = []
+    for row in rows:
+        if row.is_line:
+            renderables.append(Text())  # blank line
+
+        else:
+            value = row.get_value(data)
+
+            if isinstance(value, (Panel, Group)):
+                renderables.append(value)  # type: ignore
+
+            else:
+                renderables.append(
+                    Text.assemble((f"{row.header}: ", "bold"), str(value))
+                )
+
+    group = Group(*renderables)
+
     box = Panel.fit(
         title=f"{resource_name} Details",
         border_style="green",
-        renderable="\n".join(
-            f"[bold]{row.header}:[/bold] {row.get_value(data)}"
-            if not row.is_line
-            else ""
-            for row in rows
-        ),
+        renderable=group,
     )
+
+    box.expand = fullscreen
 
     console.print(box)
