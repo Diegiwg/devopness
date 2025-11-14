@@ -1,0 +1,93 @@
+import typer
+from devopness.models import Project, ProjectRelation
+from rich.console import Console
+
+import devopness_cli_with_typer.types as types
+from devopness_cli_with_typer.components.details import DetailsRow, details
+from devopness_cli_with_typer.components.summary import SummaryColumn, summary
+from devopness_cli_with_typer.components.to_json import to_json
+from devopness_cli_with_typer.services.devopness_api import devopness
+
+app = typer.Typer(
+    name="project",
+    help="Manage projects in Devopness.",
+    no_args_is_help=True,
+)
+
+console = Console()
+
+
+@app.command(name="list")
+def list_projects(
+    page: types.PageType = types.PageOption,
+    per_page: types.PerPageType = types.PerPageOption,
+    output: types.OutputType = types.OutputOption,
+) -> None:
+    """List all projects."""
+    res = devopness.projects.list_projects(page, per_page)
+
+    if output in ("json", "text"):
+        return to_json(res.data, pretty=output == "json")
+
+    return summary(
+        data=res.data,
+        resource_name="Project",
+        columns=[
+            SummaryColumn[ProjectRelation](
+                header="ID",
+                get_value=lambda p: str(p.id),
+            ),
+            SummaryColumn[ProjectRelation](
+                header="Name",
+                get_value=lambda p: p.name,
+            ),
+            SummaryColumn[ProjectRelation](
+                header="Owner",
+                get_value=lambda p: f"@{p.owner.name}",
+            ),
+        ],
+        page=page,
+        page_count=res.page_count,
+    )
+
+
+@app.command(name="get")
+def get_project(
+    project_id: int = typer.Option(
+        help="ID of the project to retrieve.",
+        min=1,
+    ),
+) -> None:
+    """Get a project by ID."""
+    res = devopness.projects.get_project(project_id)
+
+    project = res.data
+
+    return details(
+        project,
+        [
+            DetailsRow[Project](
+                header="ID",
+                get_value=lambda p: str(p.id),
+            ),
+            DetailsRow[Project](
+                header="Name",
+                get_value=lambda p: p.name,
+            ),
+            DetailsRow[Project](
+                header="Owner",
+                get_value=lambda p: f"@{p.owner.name}",
+            ),
+            DetailsRow.line(),
+            DetailsRow[Project](
+                header="Created At",
+                get_value=lambda p: p.created_at,
+            ),
+            DetailsRow[Project](
+                header="Updated At",
+                get_value=lambda p: p.updated_at,
+            ),
+        ],
+        project_id,
+        "Project",
+    )
