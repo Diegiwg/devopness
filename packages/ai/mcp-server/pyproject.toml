@@ -8,7 +8,9 @@ version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "fastmcp>=2.14.4,<3",
+]
 
 [project.scripts]
 devopness-mcp-server = "devopness_mcp_server.proxy:run"
