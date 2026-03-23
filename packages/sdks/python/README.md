@@ -1,4 +1,4 @@
-# Devopness Python SDK
+# Devopness SDK - Python
 
 [![PyPI version](https://img.shields.io/pypi/v/devopness.svg)](https://pypi.org/project/devopness/)
 [![Python versions](https://img.shields.io/pypi/pyversions/devopness.svg)](https://pypi.org/project/devopness/)
@@ -232,15 +232,3 @@ created = client.projects.create_project({"name": "My project"})
 updated = client.projects.update_project(project_id=created.data.id, data={"name": "Renamed"})
 ```
 
-## Development
-
-From the repository root:
-
-```bash
-cd packages/sdks/python
-python -m unittest discover -s tests/unit
-```
-
-## License
-
-MIT.
