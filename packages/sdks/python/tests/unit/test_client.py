@@ -54,7 +54,9 @@ class TestDevopnessClient(unittest.TestCase):
 
         for service_name in type(devopness).__annotations__:
             service = getattr(devopness, service_name)
-            self.assertIsInstance(service, type(devopness).__annotations__[service_name])
+            self.assertIsInstance(
+                service, type(devopness).__annotations__[service_name]
+            )
 
     def test_config_is_shared_across_services(self) -> None:
         config = DevopnessClientConfig(base_url="https://test.local", debug=True)
@@ -105,7 +107,9 @@ class TestDevopnessClientAsync(unittest.IsolatedAsyncioTestCase):
 
         for service_name in type(devopness).__annotations__:
             service = getattr(devopness, service_name)
-            self.assertIsInstance(service, type(devopness).__annotations__[service_name])
+            self.assertIsInstance(
+                service, type(devopness).__annotations__[service_name]
+            )
 
     def test_config_is_shared_across_services(self) -> None:
         config = DevopnessClientConfig(base_url="https://test.local", debug=True)

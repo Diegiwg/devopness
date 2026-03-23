@@ -197,7 +197,10 @@ class DevopnessResponse(Generic[T]):
         decoded = raw_data.decode("utf-8")
 
         try:
-            return json.loads(decoded)
+            return cast(
+                str | int | float | list[Any] | dict[str, Any],
+                json.loads(decoded),
+            )
         except json.JSONDecodeError:
             return decoded
 
