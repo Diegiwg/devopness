@@ -103,6 +103,21 @@ class TestDevopnessResponse(unittest.TestCase):
         assert isinstance(response.data, float)
         assert math.isclose(response.data, 3.14)
 
+    def test_devopness_response_returns_raw_dict_when_validation_is_disabled(self) -> None:
+        previous = DevopnessResponse._validate_responses
+        DevopnessResponse.set_validate_responses(False)
+
+        try:
+            response: DevopnessResponse[DummyModel] = DevopnessResponse(
+                build_response({"id": "invalid"}),
+                DummyModel,
+            )
+        finally:
+            DevopnessResponse.set_validate_responses(previous)
+
+        assert isinstance(response.data, dict)
+        assert response.data == {"id": "invalid"}
+
     def test_devopness_response_with_empty_body(self) -> None:
         response: DevopnessResponse[None] = DevopnessResponse(
             build_response(b""),

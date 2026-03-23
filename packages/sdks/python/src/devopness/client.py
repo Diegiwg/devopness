@@ -10,6 +10,7 @@ from .client_config import (
     DevopnessClientConfig,
     DevopnessClientConfigDict,
 )
+from .core.response import DevopnessResponse
 from .services.action_service import (
     ActionService,
     ActionServiceAsync,
@@ -165,6 +166,7 @@ class DevopnessClient:
             config = DevopnessClientConfig.from_dict(config)
 
         DevopnessBaseService._config = config
+        DevopnessResponse.set_validate_responses(config.validate_responses)
 
         self.actions = ActionService()
         self.api_tokens = APITokenService()
@@ -210,8 +212,20 @@ class DevopnessClient:
         # pylint: disable=protected-access
         return DevopnessBaseService._access_token
 
+    def __set_validate_responses(self, validate_responses: bool) -> None:
+        # pylint: disable=protected-access
+        DevopnessBaseService._config.validate_responses = validate_responses
+        DevopnessResponse.set_validate_responses(validate_responses)
+
+    def __get_validate_responses(self) -> bool:
+        # pylint: disable=protected-access
+        return DevopnessBaseService._config.validate_responses
+
     api_token = property(fset=__set_api_token, fget=__get_api_token)
     access_token = property(fset=__set_access_token, fget=__get_access_token)
+    validate_responses = property(
+        fset=__set_validate_responses, fget=__get_validate_responses
+    )
 
 
 class DevopnessClientAsync:
@@ -257,6 +271,7 @@ class DevopnessClientAsync:
             config = DevopnessClientConfig.from_dict(config)
 
         DevopnessBaseServiceAsync._config = config
+        DevopnessResponse.set_validate_responses(config.validate_responses)
 
         self.actions = ActionServiceAsync()
         self.api_tokens = APITokenServiceAsync()
@@ -302,5 +317,17 @@ class DevopnessClientAsync:
         # pylint: disable=protected-access
         return DevopnessBaseServiceAsync._access_token
 
+    def __set_validate_responses(self, validate_responses: bool) -> None:
+        # pylint: disable=protected-access
+        DevopnessBaseServiceAsync._config.validate_responses = validate_responses
+        DevopnessResponse.set_validate_responses(validate_responses)
+
+    def __get_validate_responses(self) -> bool:
+        # pylint: disable=protected-access
+        return DevopnessBaseServiceAsync._config.validate_responses
+
     api_token = property(fset=__set_api_token, fget=__get_api_token)
     access_token = property(fset=__set_access_token, fget=__get_access_token)
+    validate_responses = property(
+        fset=__set_validate_responses, fget=__get_validate_responses
+    )

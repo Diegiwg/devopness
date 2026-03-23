@@ -1,271 +1,246 @@
-# Devopness SDK - Python
+# Devopness Python SDK
 
 [![PyPI version](https://img.shields.io/pypi/v/devopness.svg)](https://pypi.org/project/devopness/)
+[![Python versions](https://img.shields.io/pypi/pyversions/devopness.svg)](https://pypi.org/project/devopness/)
 
-The official Devopness SDK for Python.
+Official Python client for the [Devopness API](https://www.devopness.com/). Use it to automate infrastructure, applications, environments, credentials, pipelines, and other Devopness resources from scripts, CLIs, background jobs, and web services.
 
-This SDK provides predefined classes to access Devopness platform resources. It's suitable for building CLI tools, backend services, or automation scripts, helping you interact with the Devopness API.
+## Why use this SDK?
 
-## 📌 Table of Contents
+- Typed request and response models powered by Pydantic.
+- First-class sync and async clients with a consistent API.
+- Structured exceptions for API and network failures.
+- Thin, resource-oriented service surface that maps closely to the Devopness API.
 
-- [Devopness SDK - Python](#devopness-sdk---python)
-  - [📌 Table of Contents](#-table-of-contents)
-  - [Usage](#usage)
-    - [Install](#install)
-    - [Initializing](#initializing)
-    - [Custom Configuration](#custom-configuration)
-    - [Authentication](#authentication)
-      - [Authentication with Personal Access Token](#authentication-with-personal-access-token)
-        - [Asynchronous usage](#asynchronous-usage)
-        - [Synchronous usage](#synchronous-usage)
-      - [Authentication with Project API Token](#authentication-with-project-api-token)
-        - [Asynchronous usage](#asynchronous-usage-1)
-        - [Synchronous usage](#synchronous-usage-1)
-      - [Authentication with Login (Deprecated)](#authentication-with-login-deprecated)
-    - [Invoking authentication-protected endpoints](#invoking-authentication-protected-endpoints)
-      - [Asynchronous usage](#asynchronous-usage-2)
-      - [Synchronous usage](#synchronous-usage-2)
-    - [Error Handling](#error-handling)
-  - [Development](#development)
-    - [With Docker](#with-docker)
-      - [Prerequisites](#prerequisites)
-      - [Steps](#steps)
-
-## Usage
-
-The SDK supports both asynchronous and synchronous usage, so you can choose based on your needs.
-
-### Install
-
-Install the SDK using your preferred package manager:
+## Installation
 
 ```bash
-# Using uv
-uv add devopness
-
-# Using poetry
-poetry add devopness
-
-# Using pip
 pip install devopness
 ```
 
-### Initializing
+Alternative package managers:
 
-Import the SDK and create an instance of `DevopnessClient` or `DevopnessClientAsync`:
-
-```python
-from devopness import DevopnessClient, DevopnessClientAsync
-
-devopness = DevopnessClient()
-devopness_async = DevopnessClientAsync()
+```bash
+uv add devopness
+poetry add devopness
 ```
 
-### Custom Configuration
+## Quickstart
 
-You can provide a custom configuration when initializing the client:
+The SDK exposes two entry points:
 
-```python
-from devopness import DevopnessClient, DevopnessClientAsync, DevopnessClientConfig
+- `DevopnessClient` for synchronous code.
+- `DevopnessClientAsync` for asynchronous code.
 
-config = DevopnessClientConfig(base_url='https://api.devopness.com', timeout=10)
-
-devopness = DevopnessClient(config)
-devopness_async = DevopnessClientAsync(config)
-```
-
-Configuration options:
-
-| Parameter            | Default                     | Description                                         |
-| -------------------- | --------------------------- | --------------------------------------------------- |
-| `base_url`           | `https://api.devopness.com` | Base URL for all API requests                       |
-| `timeout`            | `30`                        | Timeout for HTTP requests (in seconds)              |
-| `default_encoding`   | `utf-8`                     | Encoding for response content                       |
-
-### Authentication
-
-#### Authentication with Personal Access Token
-
-Ensure you have a Personal Access Token from Devopness. If you don't have one, see [Add a Personal Access Token](https://www.devopness.com/docs/api-tokens/personal-access-tokens/add-personal-access-token).
-
-##### Asynchronous usage
+### Synchronous quickstart
 
 ```python
-import asyncio
-from devopness import DevopnessClientAsync, DevopnessClientConfig
+import os
 
-# Option 1: Pass token during initialization
-config = DevopnessClientConfig(api_token='your-personal-access-token-here')
-devopness = DevopnessClientAsync(config)
-
-# Option 2: Set token after initialization
-devopness = DevopnessClientAsync()
-devopness.api_token = 'your-personal-access-token-here'
-
-async def main():
-    current_user = await devopness.users.get_user_me()
-    print(f'User ID: {current_user.data.id}')
-
-if __name__ == "__main__":
-    asyncio.run(main())
-```
-
-##### Synchronous usage
-
-```python
 from devopness import DevopnessClient, DevopnessClientConfig
 
-# Option 1: Pass token during initialization
-config = DevopnessClientConfig(api_token='your-personal-access-token-here')
-devopness = DevopnessClient(config)
+client = DevopnessClient(
+    DevopnessClientConfig(
+        api_token=os.environ["DEVOPNESS_API_TOKEN"],
+    )
+)
 
-# Option 2: Set token after initialization
-devopness = DevopnessClient()
-devopness.api_token = 'your-personal-access-token-here'
-
-def main():
-    current_user = devopness.users.get_user_me()
-    print(f'User ID: {current_user.data.id}')
-
-if __name__ == "__main__":
-    main()
+me = client.users.get_user_me()
+print(me.status)
+print(me.data.id)
 ```
 
-#### Authentication with Project API Token
-
-Ensure you have a Project API Token from Devopness. If you don't have one, see [Add a Project API Token](https://www.devopness.com/docs/api-tokens/project-api-tokens/add-project-api-token).
-
-##### Asynchronous usage
+### Asynchronous quickstart
 
 ```python
 import asyncio
-from devopness import DevopnessClientAsync
+import os
 
-devopness = DevopnessClientAsync()
-devopness.api_token = 'your-project-api-token-here'
+from devopness import DevopnessClientAsync, DevopnessClientConfig
 
-async def main():
-    project = await devopness.projects.get_project(project_id=123)
-    print(f'Project name: {project.data.name}')
+
+async def main() -> None:
+    client = DevopnessClientAsync(
+        DevopnessClientConfig(
+            api_token=os.environ["DEVOPNESS_API_TOKEN"],
+        )
+    )
+
+    me = await client.users.get_user_me()
+    print(me.status)
+    print(me.data.id)
+
 
 if __name__ == "__main__":
     asyncio.run(main())
 ```
 
-##### Synchronous usage
+## Authentication
+
+Use a Devopness token and pass it through `DevopnessClientConfig(api_token=...)` or assign it later through `client.api_token`.
+
+### Personal access token
 
 ```python
 from devopness import DevopnessClient
 
-devopness = DevopnessClient()
-devopness.api_token = 'your-project-api-token-here'
+client = DevopnessClient()
+client.api_token = "your-personal-access-token"
 
-def main():
-    project = devopness.projects.get_project(project_id=123)
-    print(f'Project name: {project.data.name}')
-
-if __name__ == "__main__":
-    main()
+current_user = client.users.get_user_me()
+print(current_user.data.id)
 ```
 
-#### Authentication with Login (Deprecated)
+Create a token in Devopness by following the official guide for personal access tokens:
+https://www.devopness.com/docs/api-tokens/personal-access-tokens/add-personal-access-token
 
-> **Warning:** Email/password authentication is no longer supported. API requests using this method return 4xx errors.
-
-### Invoking authentication-protected endpoints
-
-Once authenticated, you can invoke protected endpoints. Here's an example of retrieving user details and listing projects:
-
-#### Asynchronous usage
+### Project API token
 
 ```python
-import asyncio
-import os
-from devopness import DevopnessClientAsync, DevopnessClientConfig
-from devopness.core import DevopnessSdkError
-
-config = DevopnessClientConfig(api_token=os.getenv('DEVOPNESS_API_TOKEN'))
-devopness = DevopnessClientAsync(config)
-
-async def get_user_profile():
-    try:
-        # Retrieve current user details
-        current_user = await devopness.users.get_user_me()
-        print(f'User ID: {current_user.data.id}')
-
-    except DevopnessSdkError as error:
-        print(f'Error: {error}')
-
-if __name__ == "__main__":
-    asyncio.run(get_user_profile())
-```
-
-#### Synchronous usage
-
-```python
-import os
 from devopness import DevopnessClient, DevopnessClientConfig
-from devopness.core import DevopnessSdkError
 
-config = DevopnessClientConfig(api_token=os.getenv('DEVOPNESS_API_TOKEN'))
-devopness = DevopnessClient(config)
+client = DevopnessClient(
+    DevopnessClientConfig(api_token="your-project-api-token")
+)
 
-def get_user_profile():
-    try:
-        # Retrieve current user details
-        current_user = devopness.users.get_user_me()
-        print(f'User ID: {current_user.data.id}')
-
-    except DevopnessSdkError as error:
-        print(f'Error: {error}')
-
-if __name__ == "__main__":
-    get_user_profile()
+project = client.projects.get_project(project_id=123)
+print(project.data.name)
 ```
 
-### Error Handling
+Create a token in Devopness by following the official guide for project API tokens:
+https://www.devopness.com/docs/api-tokens/project-api-tokens/add-project-api-token
 
-The SDK provides structured error handling through exceptions:
+> Email/password login is deprecated and should not be used for new integrations.
 
-- `DevopnessApiError`: This exception is raised when the Devopness API returns an error response. This typically indicates issues with the request itself, such as invalid input data, unauthorized access, or resource not found. It provides the following attributes to help diagnose the error:
+## Configuration
 
-| Attribute   | Description                                                                                                        |
-| ----------- | ------------------------------------------------------------------------------------------------------------------ |
-| status_code | The HTTP status code returned by the API                                                                           |
-| message     | A general error message from the API                                                                               |
-| errors      | An optional dictionary containing detailed validation errors, often encountered during create or update operations |
+`DevopnessClientConfig` controls how requests and responses are handled.
 
-- `DevopnessNetworkError`: This exception is raised when a generic network-related issue occurs during the communication with the Devopness API. This could be due to problems like an unreachable host, connection timeouts, or other network configuration errors.
+```python
+from devopness import DevopnessClientConfig
 
-Both exceptions inherit from `DevopnessSdkError`, the base class for all SDK exceptions. You can use this class to catch and handle all exceptions raised by the SDK.
+config = DevopnessClientConfig(
+    base_url="https://api.devopness.com",
+    timeout=30,
+    debug=False,
+    validate_responses=True,
+)
+```
+
+### Configuration reference
+
+| Option | Default | Description |
+| --- | --- | --- |
+| `api_token` | `None` | Token used for authenticated requests. |
+| `auto_refresh_token` | `False` | Deprecated legacy option. Automatically disabled when `api_token` is set. |
+| `base_url` | `https://api.devopness.com` | Base URL for the Devopness API. |
+| `debug` | `False` | Enables request/response debug logging. |
+| `default_encoding` | `utf-8` | Default response encoding for `httpx`. |
+| `headers` | SDK defaults | Base headers sent on every request. |
+| `timeout` | `30` | Request timeout in seconds. |
+| `validate_responses` | `True` | Parse API responses into Pydantic models. Set to `False` to receive raw decoded payloads instead. |
+
+## Core concepts
+
+### Clients
+
+A client owns the SDK configuration and exposes services as attributes such as `users`, `projects`, `applications`, and `servers`.
+
+### Services
+
+Each service groups operations for one resource family. For example, `client.users.get_user_me()` and `client.projects.get_project(project_id=123)`.
+
+### Responses
+
+Most methods return `DevopnessResponse[T]` with:
+
+- `status`: HTTP status code.
+- `data`: Parsed model, list of models, primitive value, or raw decoded payload depending on the endpoint and configuration.
+- `page_count`: Pagination metadata derived from the `Link` header.
+- `action_id`: Action identifier from the `x-devopness-action-id` response header when present.
+
+## Sync and async usage
+
+The sync and async clients expose the same service names and method signatures.
+
+```python
+# Sync
+project = client.projects.get_project(project_id=123)
+
+# Async
+project = await async_client.projects.get_project(project_id=123)
+```
+
+## Error handling
+
+All SDK exceptions inherit from `DevopnessSdkError`.
+
+- `DevopnessApiError`: The API returned a non-2xx response.
+- `DevopnessNetworkError`: A transport-level failure occurred.
+
+```python
+from devopness import DevopnessClient
+from devopness.core import DevopnessApiError, DevopnessNetworkError, DevopnessSdkError
+
+client = DevopnessClient()
+client.api_token = "your-token"
+
+try:
+    response = client.projects.get_project(project_id=123)
+    print(response.data.name)
+except DevopnessApiError as exc:
+    print(exc.status_code)
+    print(exc.message)
+    print(exc.errors)
+except DevopnessNetworkError as exc:
+    print(f"Network error: {exc}")
+except DevopnessSdkError as exc:
+    print(f"Unexpected SDK error: {exc}")
+```
+
+## Disabling response validation
+
+By default, the SDK validates API responses using Pydantic models. If you want maximum tolerance for partially malformed payloads, disable validation.
+
+```python
+from devopness import DevopnessClient, DevopnessClientConfig
+
+client = DevopnessClient(
+    DevopnessClientConfig(
+        api_token="your-token",
+        validate_responses=False,
+    )
+)
+
+response = client.users.get_user_me()
+print(type(response.data))
+print(response.data)
+```
+
+With validation disabled, the SDK returns decoded JSON objects, lists, strings, integers, or floats when possible, instead of Pydantic models.
+
+## More examples
+
+```python
+# List projects
+projects = client.projects.list_projects()
+for item in projects.data:
+    print(item.id, item.name)
+
+# Create or update resources using SDK models or plain dictionaries
+created = client.projects.create_project({"name": "My project"})
+updated = client.projects.update_project(project_id=created.data.id, data={"name": "Renamed"})
+```
 
 ## Development
 
-To build the SDK locally, use Docker:
+From the repository root:
 
-### With Docker
-
-#### Prerequisites
-
-- [Docker](https://www.docker.com/products/docker-desktop/)
-- [Make](https://www.gnu.org/software/make/)
-
-#### Steps
-
-1. Navigate to the project directory:
-
-```shell
-cd packages/sdks/python/
+```bash
+cd packages/sdks/python
+python -m unittest discover -s tests/unit
 ```
 
-1. Build the Docker image:
+## License
 
-```shell
-make build-image
-```
-
-1. Build the Python SDK:
-
-```shell
-make build-sdk-python
-```
+MIT.
