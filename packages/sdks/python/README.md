@@ -217,7 +217,7 @@ print(type(response.data))
 print(response.data)
 ```
 
-With validation disabled, the SDK returns decoded JSON objects, lists, strings, integers, or floats when possible, instead of Pydantic models.
+With validation disabled, JSON objects are returned as raw wrappers that support both item access (`response.data["id"]`) and dot-access (`response.data.id`). Nested objects behave the same way, while lists and primitive values are returned as decoded Python values.
 
 ## More examples
 

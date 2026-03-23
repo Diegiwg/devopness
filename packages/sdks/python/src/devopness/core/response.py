@@ -12,9 +12,35 @@ from pydantic import ValidationError
 
 from devopness.base import DevopnessBaseModel
 
-__all__ = ["DevopnessResponse"]
+__all__ = ["DevopnessRawDict", "DevopnessResponse"]
 
 T = TypeVar("T")
+
+
+class DevopnessRawDict(dict[str, Any]):
+    """Dictionary wrapper that preserves item access and adds attribute access."""
+
+    def __getattr__(self, key: str) -> Any:  # noqa: ANN401
+        try:
+            return self[key]
+        except KeyError as exc:
+            raise AttributeError(key) from exc
+
+    @classmethod
+    def wrap(cls, value: Any) -> Any:  # noqa: ANN401
+        """Recursively wrap decoded JSON objects to support dot-access."""
+        if isinstance(value, dict):
+            return cls(
+                {
+                    item_key: cls.wrap(item_value)
+                    for item_key, item_value in value.items()
+                }
+            )
+
+        if isinstance(value, list):
+            return [cls.wrap(item) for item in value]
+
+        return value
 
 
 class DevopnessResponse(Generic[T]):
@@ -199,7 +225,7 @@ class DevopnessResponse(Generic[T]):
         try:
             return cast(
                 str | int | float | list[Any] | dict[str, Any],
-                json.loads(decoded),
+                DevopnessRawDict.wrap(json.loads(decoded)),
             )
         except json.JSONDecodeError:
             return decoded

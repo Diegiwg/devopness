@@ -7,7 +7,7 @@ from unittest.mock import AsyncMock, Mock, patch
 import httpx
 
 from devopness.base import DevopnessBaseModel
-from devopness.core import DevopnessResponse
+from devopness.core import DevopnessRawDict, DevopnessResponse
 
 
 class DummyModel(DevopnessBaseModel):
@@ -119,6 +119,24 @@ class TestDevopnessResponse(unittest.TestCase):
 
         assert isinstance(response.data, dict)
         assert response.data == {"id": "invalid"}
+
+    def test_devopness_response_raw_dict_supports_dot_access(self) -> None:
+        previous = DevopnessResponse._validate_responses
+        DevopnessResponse.set_validate_responses(False)
+
+        try:
+            response: DevopnessResponse[Any] = DevopnessResponse(
+                build_response({"id": 123, "profile": {"name": "Alice"}}),
+                DummyModel,
+            )
+        finally:
+            DevopnessResponse.set_validate_responses(previous)
+
+        assert isinstance(response.data, DevopnessRawDict)
+        assert response.data.id == 123
+        assert response.data["id"] == 123
+        assert isinstance(response.data.profile, DevopnessRawDict)
+        assert response.data.profile.name == "Alice"
 
     def test_devopness_response_with_empty_body(self) -> None:
         response: DevopnessResponse[None] = DevopnessResponse(
