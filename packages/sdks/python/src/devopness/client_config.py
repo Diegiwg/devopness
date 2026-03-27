@@ -44,6 +44,8 @@ class DevopnessClientConfig(DevopnessBaseModel):
         default_encoding (str): Default encoding for response content.
         headers (dict[str, str]): Default headers for API requests.
         timeout (int): Request timeout in seconds.
+        validate_responses (bool): Controls whether API responses are parsed
+                                   into Pydantic models.
     """
 
     api_token: str | None = None
@@ -61,6 +63,7 @@ class DevopnessClientConfig(DevopnessBaseModel):
         "User-Agent": get_user_agent(),
     }
     timeout: int = 30
+    validate_responses: bool = True
 
     @field_validator("base_url", mode="before")
     @classmethod
@@ -109,3 +112,4 @@ class DevopnessClientConfigDict(TypedDict, total=False):
     headers: dict[str, str]
     timeout: int
     user_agent: str
+    validate_responses: bool
