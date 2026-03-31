@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import AsyncMock, Mock, patch
 
 import httpx
 
@@ -9,22 +10,19 @@ from devopness.core.network_error import (
 )
 
 
-@handle_network_errors
-async def failing_request() -> httpx.Response:
-    # This will raise a real network error (DNS resolution failure)
-    async with httpx.AsyncClient() as client:
-        return await client.get("https://host.invalid/")
-
-
-@handle_network_errors_sync
-def failing_request_sync() -> httpx.Response:
-    # This will raise a real network error (DNS resolution failure)
-    with httpx.Client() as client:
-        return client.get("https://host.invalid/")
-
-
 class TestDevopnessNetworkError(unittest.IsolatedAsyncioTestCase):
-    async def test_devopness_network_error(self) -> None:
+    @patch("httpx.AsyncClient.get", new_callable=AsyncMock)
+    async def test_devopness_network_error(self, mock_get: AsyncMock) -> None:
+        request = httpx.Request("GET", "https://host.invalid/")
+        mock_get.side_effect = httpx.ConnectError(
+            "[Errno -2] Name or service not known", request=request
+        )
+
+        @handle_network_errors
+        async def failing_request() -> httpx.Response:
+            async with httpx.AsyncClient() as client:
+                return await client.get("https://host.invalid/")
+
         with self.assertRaises(DevopnessNetworkError) as context:
             await failing_request()
 
@@ -42,7 +40,18 @@ class TestDevopnessNetworkError(unittest.IsolatedAsyncioTestCase):
             "Exception: [Errno"
         ) in string_output
 
-    def test_devopness_network_error_sync(self) -> None:
+    @patch("httpx.Client.get")
+    def test_devopness_network_error_sync(self, mock_get: Mock) -> None:
+        request = httpx.Request("GET", "https://host.invalid/")
+        mock_get.side_effect = httpx.ConnectError(
+            "[Errno -2] Name or service not known", request=request
+        )
+
+        @handle_network_errors_sync
+        def failing_request_sync() -> httpx.Response:
+            with httpx.Client() as client:
+                return client.get("https://host.invalid/")
+
         with self.assertRaises(DevopnessNetworkError) as context:
             failing_request_sync()
 
