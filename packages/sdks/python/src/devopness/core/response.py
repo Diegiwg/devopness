@@ -12,9 +12,35 @@ from pydantic import ValidationError
 
 from devopness.base import DevopnessBaseModel
 
-__all__ = ["DevopnessResponse"]
+__all__ = ["DevopnessRawDict", "DevopnessResponse"]
 
 T = TypeVar("T")
+
+
+class DevopnessRawDict(dict[str, Any]):
+    """Dictionary wrapper that preserves item access and adds attribute access."""
+
+    def __getattr__(self, key: str) -> Any:  # noqa: ANN401
+        try:
+            return self[key]
+        except KeyError as exc:
+            raise AttributeError(key) from exc
+
+    @classmethod
+    def wrap(cls, value: Any) -> Any:  # noqa: ANN401
+        """Recursively wrap decoded JSON objects to support dot-access."""
+        if isinstance(value, dict):
+            return cls(
+                {
+                    item_key: cls.wrap(item_value)
+                    for item_key, item_value in value.items()
+                }
+            )
+
+        if isinstance(value, list):
+            return [cls.wrap(item) for item in value]
+
+        return value
 
 
 class DevopnessResponse(Generic[T]):
@@ -29,6 +55,8 @@ class DevopnessResponse(Generic[T]):
         action_id (Optional[int]): Action ID extracted from the
                                    response headers (if available).
     """
+
+    _validate_responses = True
 
     status: int
     data: T
@@ -79,6 +107,11 @@ class DevopnessResponse(Generic[T]):
         result.action_id = result._parse_action_id(response)
 
         return result
+
+    @classmethod
+    def set_validate_responses(cls, validate_responses: bool) -> None:
+        """Configure whether response payloads are parsed into SDK models."""
+        cls._validate_responses = validate_responses
 
     def _extract_last_page_number(self, response: httpx.Response) -> int:
         """
@@ -179,6 +212,24 @@ class DevopnessResponse(Generic[T]):
 
         return self._deserialize_data(raw_data, model_cls)
 
+    def _decode_raw_data(
+        self,
+        raw_data: bytes,
+    ) -> str | int | float | list[Any] | dict[str, Any] | None:
+        """Decode raw response payloads without validating against Pydantic models."""
+        if raw_data == b"":
+            return None
+
+        decoded = raw_data.decode("utf-8")
+
+        try:
+            return cast(
+                str | int | float | list[Any] | dict[str, Any],
+                DevopnessRawDict.wrap(json.loads(decoded)),
+            )
+        except json.JSONDecodeError:
+            return decoded
+
     def _deserialize_data(
         self,
         raw_data: bytes,
@@ -196,8 +247,14 @@ class DevopnessResponse(Generic[T]):
         Deserialize raw response data into the specified model class.
         """
         # Early return conditions
-        if raw_data == b"" or model_cls is None:
+        if raw_data == b"":
             return None
+
+        if model_cls is None:
+            return None
+
+        if not self._validate_responses:
+            return self._decode_raw_data(raw_data)
 
         try:
             # Handle primitive types

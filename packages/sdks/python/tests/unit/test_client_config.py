@@ -66,3 +66,8 @@ class TestDevopnessClientConfig(unittest.TestCase):
             "To avoid this warning, explicitly set 'auto_refresh_token=False' in your configuration.",
             str(cm.warning),
         )
+
+    def test_validate_responses_defaults_to_true(self) -> None:
+        config = DevopnessClientConfig()
+
+        self.assertTrue(config.validate_responses)
