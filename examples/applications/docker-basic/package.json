@@ -1,0 +1,10 @@
+{
+  "name": "docker-basic-example",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Devopness example: minimal Node.js app packaged in Docker",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  }
+}
