@@ -102,6 +102,7 @@ Open source packages and documentation for [Devopness](https://www.devopness.com
 | :----------------------------------------------------- | :-------------------- | :---------------------------------------------------------- |
 | [/docs](docs/)                                         | Documentation         | Product docs                                                |
 | [/packages/sdks/javascript](packages/sdks/javascript/) | `@devopness/sdk-js`   | JavaScript/TypeScript API SDK                               |
+| [/packages/sdks/go](packages/sdks/go/)                 | `devopness`           | Go API SDK                                                  |
 | [/packages/sdks/python](packages/sdks/python/)         | `devopness`           | Python API SDK                                              |
 | [/packages/ui/react](packages/ui/react/)               | `@devopness/ui-react` | React design system                                         |
 | [/examples/applications](examples/applications/)       | Examples              | Sample app integrations (Rails, Express, Laravel, and more) |
